@@ -9,6 +9,8 @@ const protectedRoutes = require("./routes/protectedRoutes");
 const warehouseRoutes = require("./routes/warehouseRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const stockInRoutes = require("./routes/stockInRoutes");
+const vendorRoutes = require("./routes/vendorRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
@@ -25,5 +27,7 @@ app.use("/api", protectedRoutes);
 app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/stock-in", stockInRoutes);
+app.use("/api/vendors", vendorRoutes);
+app.use("/api/products", productRoutes);
 
 module.exports = app;

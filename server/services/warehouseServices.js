@@ -1,35 +1,64 @@
-let warehouses = [];
-const getAllWarehouses = () => warehouses;
+const db = require("../config/db");
 
-const getWarehouseById = (id) => {
-    return warehouses.find(w=> w.id === Number(id));
+const getAllWarehouses = async () => {
+    const [rows] = await db.query("SELECT * FROM warehouses");
+    return rows;
 };
 
-const createWarehouse = (warehouse) => {
-    const newWarehouse = {
-        id: warehouses.length+1,
+const getWarehouseById = async (id) => {
+    const [rows] = await db.query(
+        "SELECT * FROM warehouses WHERE id = ?",
+        [id]
+    );
+
+    return rows[0] || null;
+};
+
+const createWarehouse = async (warehouse) => {
+    const [result] = await db.query(
+        `INSERT INTO warehouses
+        (name, location, capacity)
+        VALUES (?, ?, ?)`,
+        [
+            warehouse.name,
+            warehouse.location,
+            warehouse.capacity
+        ]
+    );
+
+    return {
+        id: result.insertId,
         ...warehouse
     };
-    warehouses.push(newWarehouse);
-    return newWarehouse;
 };
 
-const updateWarehouse = (id, updatedData) => {
-    const warehouse = warehouses.find(w => w.id === Number(id));
-    if(!warehouse) {
+const updateWarehouse = async (id, updatedData) => {
+    const [result] = await db.query(
+        `UPDATE warehouses
+        SET name = ?, location = ?, capacity = ?
+        WHERE id = ?`,
+        [
+            updatedData.name,
+            updatedData.location,
+            updatedData.capacity,
+            id
+        ]
+    );
+
+    if (result.affectedRows === 0) {
         return null;
     }
-    Object.assign(warehouse, updatedData);
-    return warehouse;
+
+    return await getWarehouseById(id);
 };
 
-const deleteWarehouse = (id) => {
-    const index = warehouses.findIndex(w => w.id === Number(id));
-    if(index === -1) {
-        return false;
-    }
-    warehouses.splice(index, 1);
-    return true;
+const deleteWarehouse = async (id) => {
+    const [result] = await db.query(
+        "DELETE FROM warehouses WHERE id = ?",
+        [id]
+    );
+
+    return result.affectedRows > 0;
 };
 
 module.exports = {

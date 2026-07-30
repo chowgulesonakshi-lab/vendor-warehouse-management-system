@@ -1,11 +1,12 @@
-const warehouseService = require("../services/warehouseServices");
+const productService = require("../services/productServices");
 
-const createWarehouse = async (req, res) => {
+const createProduct = async (req, res) => {
     try {
-        const warehouse = await warehouseService.createWarehouse(req.body);
+        const product = await productService.createProduct(req.body);
+
         res.status(201).json({
             success: true,
-            data: warehouse
+            data: product
         });
     } catch (error) {
         res.status(500).json({
@@ -15,12 +16,13 @@ const createWarehouse = async (req, res) => {
     }
 };
 
-const getAllWarehouses = async (req, res) => {
+const getAllProducts = async (req, res) => {
     try {
-        const warehouses = await warehouseService.getAllWarehouses();
+        const products = await productService.getAllProducts();
+
         res.json({
             success: true,
-            data: warehouses
+            data: products
         });
     } catch (error) {
         res.status(500).json({
@@ -30,18 +32,20 @@ const getAllWarehouses = async (req, res) => {
     }
 };
 
-const getWarehouseById = async (req, res) => {
+const getProductById = async (req, res) => {
     try {
-        const warehouse = await warehouseService.getWarehouseById(req.params.id);
-        if (!warehouse) {
+        const product = await productService.getProductById(req.params.id);
+
+        if (!product) {
             return res.status(404).json({
                 success: false,
-                message: "Warehouse not found"
+                message: "Product not found"
             });
         }
+
         res.json({
             success: true,
-            data: warehouse
+            data: product
         });
     } catch (error) {
         res.status(500).json({
@@ -51,21 +55,23 @@ const getWarehouseById = async (req, res) => {
     }
 };
 
-const updateWarehouse = async (req, res) => {
+const updateProduct = async (req, res) => {
     try {
-        const warehouse = await warehouseService.updateWarehouse(
+        const product = await productService.updateProduct(
             req.params.id,
             req.body
         );
-        if (!warehouse) {
+
+        if (!product) {
             return res.status(404).json({
                 success: false,
-                message: "Warehouse not found"
+                message: "Product not found"
             });
         }
+
         res.json({
             success: true,
-            data: warehouse
+            data: product
         });
     } catch (error) {
         res.status(500).json({
@@ -75,18 +81,20 @@ const updateWarehouse = async (req, res) => {
     }
 };
 
-const deleteWarehouse = async (req, res) => {
+const deleteProduct = async (req, res) => {
     try {
-        const deleted = await warehouseService.deleteWarehouse(req.params.id);
+        const deleted = await productService.deleteProduct(req.params.id);
+
         if (!deleted) {
             return res.status(404).json({
                 success: false,
-                message: "Warehouse not found"
+                message: "Product not found"
             });
         }
+
         res.json({
             success: true,
-            message: "Warehouse deleted successfully."
+            message: "Product deleted successfully."
         });
     } catch (error) {
         res.status(500).json({
@@ -97,9 +105,9 @@ const deleteWarehouse = async (req, res) => {
 };
 
 module.exports = {
-    createWarehouse,
-    getAllWarehouses,
-    getWarehouseById,
-    updateWarehouse,
-    deleteWarehouse
+    createProduct,
+    getAllProducts,
+    getProductById,
+    updateProduct,
+    deleteProduct
 };

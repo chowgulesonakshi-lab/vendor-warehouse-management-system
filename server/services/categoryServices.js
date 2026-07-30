@@ -1,36 +1,55 @@
-let categories=[];
+const db = require("../config/db");
 
-const getAllCategories = ()=> categories;
-
-const getCategoryById = (id) => {
-    return categories.find(c => c.id === Number(id));
+const getAllCategories = async () => {
+    const [rows] = await db.query("SELECT * FROM categories");
+    return rows;
 };
 
-const createCategory = (category)=> {
-    const newCategory = {
-        id: categories.length+1,
+const getCategoryById = async (id) => {
+    const [rows] = await db.query(
+        "SELECT * FROM categories WHERE id = ?",
+        [id]
+    );
+    return rows[0] || null;
+};
+
+const createCategory = async (category) => {
+    const [result] = await db.query(
+        "INSERT INTO categories (name, description) VALUES (?, ?)",
+        [
+            category.name,
+            category.description
+        ]
+    );
+    return {
+        id: result.insertId,
         ...category
     };
-    categories.push(newCategory);
-    return newCategory;
 };
 
-const updateCategory = (id, updateData) => {
-    const category = categories.find(c => c.id === Number(id));
-    if(!category){
+const updateCategory = async (id, updateData) => {
+    const [result] = await db.query(
+        `UPDATE categories
+        SET name = ?, description = ?
+        WHERE id = ?`,
+        [
+            updateData.name,
+            updateData.description,
+            id
+        ]
+    );
+    if (result.affectedRows === 0) {
         return null;
-    };
-    Object.assign(category, updateData);
-    return category;
+    }
+    return await getCategoryById(id);
 };
 
-const deleteCategory = (id) => {
-    const index = categories.findIndex(c => c.id === Number(id));
-    if (index === -1) {
-        return false;
-    }
-    categories.splice(index, 1);
-    return true;
+const deleteCategory = async (id) => {
+    const [result] = await db.query(
+        "DELETE FROM categories WHERE id = ?",
+        [id]
+    );
+    return result.affectedRows > 0;
 };
 
 module.exports = {

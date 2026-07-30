@@ -1,11 +1,12 @@
-const warehouseService = require("../services/warehouseServices");
+const vendorService = require("../services/vendorServices");
 
-const createWarehouse = async (req, res) => {
+const createVendor = async (req, res) => {
     try {
-        const warehouse = await warehouseService.createWarehouse(req.body);
+        const vendor = await vendorService.createVendor(req.body);
+
         res.status(201).json({
             success: true,
-            data: warehouse
+            data: vendor
         });
     } catch (error) {
         res.status(500).json({
@@ -15,12 +16,13 @@ const createWarehouse = async (req, res) => {
     }
 };
 
-const getAllWarehouses = async (req, res) => {
+const getAllVendors = async (req, res) => {
     try {
-        const warehouses = await warehouseService.getAllWarehouses();
+        const vendors = await vendorService.getAllVendors();
+
         res.json({
             success: true,
-            data: warehouses
+            data: vendors
         });
     } catch (error) {
         res.status(500).json({
@@ -30,18 +32,20 @@ const getAllWarehouses = async (req, res) => {
     }
 };
 
-const getWarehouseById = async (req, res) => {
+const getVendorById = async (req, res) => {
     try {
-        const warehouse = await warehouseService.getWarehouseById(req.params.id);
-        if (!warehouse) {
+        const vendor = await vendorService.getVendorById(req.params.id);
+
+        if (!vendor) {
             return res.status(404).json({
                 success: false,
-                message: "Warehouse not found"
+                message: "Vendor not found"
             });
         }
+
         res.json({
             success: true,
-            data: warehouse
+            data: vendor
         });
     } catch (error) {
         res.status(500).json({
@@ -51,21 +55,23 @@ const getWarehouseById = async (req, res) => {
     }
 };
 
-const updateWarehouse = async (req, res) => {
+const updateVendor = async (req, res) => {
     try {
-        const warehouse = await warehouseService.updateWarehouse(
+        const vendor = await vendorService.updateVendor(
             req.params.id,
             req.body
         );
-        if (!warehouse) {
+
+        if (!vendor) {
             return res.status(404).json({
                 success: false,
-                message: "Warehouse not found"
+                message: "Vendor not found"
             });
         }
+
         res.json({
             success: true,
-            data: warehouse
+            data: vendor
         });
     } catch (error) {
         res.status(500).json({
@@ -75,18 +81,20 @@ const updateWarehouse = async (req, res) => {
     }
 };
 
-const deleteWarehouse = async (req, res) => {
+const deleteVendor = async (req, res) => {
     try {
-        const deleted = await warehouseService.deleteWarehouse(req.params.id);
+        const deleted = await vendorService.deleteVendor(req.params.id);
+
         if (!deleted) {
             return res.status(404).json({
                 success: false,
-                message: "Warehouse not found"
+                message: "Vendor not found"
             });
         }
+
         res.json({
             success: true,
-            message: "Warehouse deleted successfully."
+            message: "Vendor deleted successfully."
         });
     } catch (error) {
         res.status(500).json({
@@ -97,9 +105,9 @@ const deleteWarehouse = async (req, res) => {
 };
 
 module.exports = {
-    createWarehouse,
-    getAllWarehouses,
-    getWarehouseById,
-    updateWarehouse,
-    deleteWarehouse
+    createVendor,
+    getAllVendors,
+    getVendorById,
+    updateVendor,
+    deleteVendor
 };

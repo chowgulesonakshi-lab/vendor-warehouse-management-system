@@ -2,7 +2,6 @@ const express = require("express");
 
 const authenticateToken = require("../middleware/authMiddleware");
 const authorizeRoles = require("../middleware/roleMiddleware");
-
 const router = express.Router();
 
 router.get(
@@ -16,7 +15,6 @@ router.get(
             message: "Welcome Admin!",
             user: req.user
         });
-
     }
 );
 
