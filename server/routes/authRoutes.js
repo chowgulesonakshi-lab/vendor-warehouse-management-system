@@ -3,14 +3,15 @@ const { body } = require("express-validator");
 
 const { register, login } = require("../controllers/authController");
 const validate = require("../middleware/validationMiddleware");
+
 const router = express.Router();
 
 router.post(
     "/register",
     [
-        body("name")
+        body("full_name")
             .notEmpty()
-            .withMessage("Name is required"),
+            .withMessage("Full name is required"),
 
         body("email")
             .isEmail()
@@ -18,7 +19,17 @@ router.post(
 
         body("password")
             .isLength({ min: 6 })
-            .withMessage("Password must be at least 6 characters")
+            .withMessage("Password must be at least 6 characters"),
+
+        body("phone")
+            .optional()
+            .isLength({ min: 10, max: 15 })
+            .withMessage("Enter a valid phone number"),
+
+        body("role")
+            .optional()
+            .isIn(["Admin", "Manager", "Staff"])
+            .withMessage("Invalid role")
     ],
     validate,
     register

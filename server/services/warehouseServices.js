@@ -1,4 +1,4 @@
-const db = require("../config/db");
+const db = require("../../config/dbConfig");
 
 const getAllWarehouses = async () => {
     const [rows] = await db.query("SELECT * FROM warehouses");
@@ -17,12 +17,26 @@ const getWarehouseById = async (id) => {
 const createWarehouse = async (warehouse) => {
     const [result] = await db.query(
         `INSERT INTO warehouses
-        (name, location, capacity)
-        VALUES (?, ?, ?)`,
+        (
+            warehouse_name,
+            address,
+            city,
+            state,
+            pincode,
+            capacity,
+            manager_id,
+            status
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-            warehouse.name,
-            warehouse.location,
-            warehouse.capacity
+            warehouse.warehouse_name,
+            warehouse.address,
+            warehouse.city,
+            warehouse.state,
+            warehouse.pincode,
+            warehouse.capacity,
+            warehouse.manager_id,
+            warehouse.status || "Active"
         ]
     );
 
@@ -32,15 +46,28 @@ const createWarehouse = async (warehouse) => {
     };
 };
 
-const updateWarehouse = async (id, updatedData) => {
+const updateWarehouse = async (id, warehouse) => {
     const [result] = await db.query(
         `UPDATE warehouses
-        SET name = ?, location = ?, capacity = ?
+        SET
+            warehouse_name = ?,
+            address = ?,
+            city = ?,
+            state = ?,
+            pincode = ?,
+            capacity = ?,
+            manager_id = ?,
+            status = ?
         WHERE id = ?`,
         [
-            updatedData.name,
-            updatedData.location,
-            updatedData.capacity,
+            warehouse.warehouse_name,
+            warehouse.address,
+            warehouse.city,
+            warehouse.state,
+            warehouse.pincode,
+            warehouse.capacity,
+            warehouse.manager_id,
+            warehouse.status,
             id
         ]
     );

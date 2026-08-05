@@ -1,12 +1,12 @@
-const vendorService = require("../services/vendorServices");
+const supplierService = require("../services/supplierServices");
 
-const createVendor = async (req, res) => {
+const createSupplier = async (req, res) => {
     try {
-        const vendor = await vendorService.createVendor(req.body);
+        const supplier = await supplierService.createSupplier(req.body);
 
         res.status(201).json({
             success: true,
-            data: vendor
+            data: supplier
         });
     } catch (error) {
         res.status(500).json({
@@ -16,13 +16,13 @@ const createVendor = async (req, res) => {
     }
 };
 
-const getAllVendors = async (req, res) => {
+const getAllSuppliers = async (req, res) => {
     try {
-        const vendors = await vendorService.getAllVendors();
+        const suppliers = await supplierService.getAllSuppliers();
 
         res.json({
             success: true,
-            data: vendors
+            data: suppliers
         });
     } catch (error) {
         res.status(500).json({
@@ -32,20 +32,20 @@ const getAllVendors = async (req, res) => {
     }
 };
 
-const getVendorById = async (req, res) => {
+const getSupplierById = async (req, res) => {
     try {
-        const vendor = await vendorService.getVendorById(req.params.id);
+        const supplier = await supplierService.getSupplierById(req.params.id);
 
-        if (!vendor) {
+        if (!supplier) {
             return res.status(404).json({
                 success: false,
-                message: "Vendor not found"
+                message: "Supplier not found"
             });
         }
 
         res.json({
             success: true,
-            data: vendor
+            data: supplier
         });
     } catch (error) {
         res.status(500).json({
@@ -55,23 +55,23 @@ const getVendorById = async (req, res) => {
     }
 };
 
-const updateVendor = async (req, res) => {
+const updateSupplier = async (req, res) => {
     try {
-        const vendor = await vendorService.updateVendor(
+        const supplier = await supplierService.updateSupplier(
             req.params.id,
             req.body
         );
 
-        if (!vendor) {
+        if (!supplier) {
             return res.status(404).json({
                 success: false,
-                message: "Vendor not found"
+                message: "Supplier not found"
             });
         }
 
         res.json({
             success: true,
-            data: vendor
+            data: supplier
         });
     } catch (error) {
         res.status(500).json({
@@ -81,20 +81,20 @@ const updateVendor = async (req, res) => {
     }
 };
 
-const deleteVendor = async (req, res) => {
+const deleteSupplier = async (req, res) => {
     try {
-        const deleted = await vendorService.deleteVendor(req.params.id);
+        const deleted = await supplierService.deleteSupplier(req.params.id);
 
         if (!deleted) {
             return res.status(404).json({
                 success: false,
-                message: "Vendor not found"
+                message: "Supplier not found"
             });
         }
 
         res.json({
             success: true,
-            message: "Vendor deleted successfully."
+            message: "Supplier deleted successfully."
         });
     } catch (error) {
         res.status(500).json({
@@ -105,9 +105,9 @@ const deleteVendor = async (req, res) => {
 };
 
 module.exports = {
-    createVendor,
-    getAllVendors,
-    getVendorById,
-    updateVendor,
-    deleteVendor
+    createSupplier,
+    getAllSuppliers,
+    getSupplierById,
+    updateSupplier,
+    deleteSupplier
 };

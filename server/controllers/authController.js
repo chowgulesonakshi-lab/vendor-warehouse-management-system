@@ -1,64 +1,126 @@
+const db = require("../../config/dbConfig");
 const { hashPassword, comparePassword } = require("../utils/password");
 const { generateToken } = require("../utils/jwt");
 
-const users = [];
+const register = async (req, res) => {
+    try {
 
-const register = async(req, res) => {
-    try{
-        const{name, email, password} = req.body;
-        const existingUser = users.find(user=> user.email === email);
-        if(existingUser){
+        const {
+            full_name,
+            email,
+            password,
+            phone,
+            role
+        } = req.body;
+
+        const [existingUser] = await db.query(
+            `SELECT id
+             FROM users
+             WHERE email = ?`,
+            [email]
+        );
+
+        if (existingUser.length > 0) {
             return res.status(409).json({
                 success: false,
                 message: "Email already registered."
             });
         }
+
         const hashedPassword = await hashPassword(password);
-        const newUser = {
-            id: users.length+1,
-            name, email, password: hashedPassword,
-            role: "ADMIN"
-        };
-        users.push(newUser);
+
+        const [result] = await db.query(
+            `INSERT INTO users
+            (
+                full_name,
+                email,
+                password,
+                phone,
+                role
+            )
+            VALUES (?, ?, ?, ?, ?)`,
+            [
+                full_name,
+                email,
+                hashedPassword,
+                phone || null,
+                role || "Admin"
+            ]
+        );
+
         res.status(201).json({
             success: true,
-            message: "User registered successfully."
+            message: "User registered successfully.",
+            userId: result.insertId
         });
+
     } catch (error) {
-              res.status(500).json({
+
+        res.status(500).json({
             success: false,
             message: error.message
         });
+
     }
 };
 
-const login = async(req, res) => {
-    try{
-        const{email, password} = req.body;
-        const user = users.find(user => user.email === email);
-        if(!user){
+const login = async (req, res) => {
+
+    try {
+
+        const {
+            email,
+            password
+        } = req.body;
+
+        const [rows] = await db.query(
+            `SELECT *
+             FROM users
+             WHERE email = ?`,
+            [email]
+        );
+
+        if (rows.length === 0) {
             return res.status(401).json({
                 success: false,
                 message: "Invalid email or password."
             });
         }
-        const isMatch = await comparePassword(password, user.password);
+
+        const user = rows[0];
+
+        const isMatch = await comparePassword(
+            password,
+            user.password
+        );
+
         if (!isMatch) {
-              return res.status(401).json({
-                  success: false,
-                  message: "Invalid email or password."
-              });
+            return res.status(401).json({
+                success: false,
+                message: "Invalid email or password."
+            });
         }
+
         const token = generateToken(user);
+
         res.status(200).json({
             success: true,
-            token
+            token,
+            user: {
+                id: user.id,
+                full_name: user.full_name,
+                email: user.email,
+                role: user.role
+            }
         });
-    } catch(error){
+
+    } catch (error) {
+
         res.status(500).json({
             success: false,
             message: error.message
-        })
+        });
+
     }
 };
 

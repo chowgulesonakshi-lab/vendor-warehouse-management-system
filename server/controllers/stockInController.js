@@ -1,8 +1,12 @@
-const stockInService = require("../services/stockInServices");
+const stockService = require("../services/stockInServices");
 
 const addStock = async (req, res) => {
     try {
-        const stock = await stockInService.addStock(req.body);
+        const stockData = {
+            ...req.body,
+            performed_by: req.user.id
+        };
+        const stock = await stockService.addStock(stockData);
         res.status(201).json({
             success: true,
             data: stock
@@ -15,12 +19,13 @@ const addStock = async (req, res) => {
     }
 };
 
-const getAllStockEntries = async (req, res) => {
+const getAllStockTransactions = async (req, res) => {
     try {
-        const stockEntries = await stockInService.getAllStockEntries();
+        const transactions = await stockService.getAllStockTransactions();
+
         res.json({
             success: true,
-            data: stockEntries
+            data: transactions
         });
     } catch (error) {
         res.status(500).json({
@@ -30,18 +35,20 @@ const getAllStockEntries = async (req, res) => {
     }
 };
 
-const getStockEntryById = async (req, res) => {
+const getStockTransactionById = async (req, res) => {
     try {
-        const stock = await stockInService.getStockEntryById(req.params.id);
-        if (!stock) {
+        const transaction = await stockService.getStockTransactionById(req.params.id);
+
+        if (!transaction) {
             return res.status(404).json({
                 success: false,
-                message: "Stock entry not found"
+                message: "Stock transaction not found"
             });
         }
+
         res.json({
             success: true,
-            data: stock
+            data: transaction
         });
     } catch (error) {
         res.status(500).json({
@@ -53,7 +60,8 @@ const getStockEntryById = async (req, res) => {
 
 const getInventory = async (req, res) => {
     try {
-        const inventory = await stockInService.getInventory();
+        const inventory = await stockService.getInventory();
+
         res.json({
             success: true,
             data: inventory
@@ -68,7 +76,7 @@ const getInventory = async (req, res) => {
 
 module.exports = {
     addStock,
-    getAllStockEntries,
-    getStockEntryById,
+    getAllStockTransactions,
+    getStockTransactionById,
     getInventory
 };

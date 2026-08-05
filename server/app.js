@@ -9,8 +9,11 @@ const protectedRoutes = require("./routes/protectedRoutes");
 const warehouseRoutes = require("./routes/warehouseRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const stockInRoutes = require("./routes/stockInRoutes");
-const vendorRoutes = require("./routes/vendorRoutes");
-const productRoutes = require("./routes/productRoutes");
+const supplierRoutes = require("./routes/supplierRoutes");
+const stockHistoryRoutes = require("./routes/stockHistoryRoutes");
+const lowStockRoutes = require("./routes/lowStockRoutes");
+const searchRoutes = require("./routes/searchRoutes");
+const purchaseOrderRoutes = require("./routes/purchaseOrderRoutes");
 
 const app = express();
 
@@ -27,7 +30,10 @@ app.use("/api", protectedRoutes);
 app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/stock-in", stockInRoutes);
-app.use("/api/vendors", vendorRoutes);
-app.use("/api/products", productRoutes);
+app.use("/api/suppliers", supplierRoutes);
+app.use("/api/stock-history", stockHistoryRoutes);
+app.use("/api/low-stock", lowStockRoutes);
+app.use("/api/search", searchRoutes);
+app.use("/api/purchase-orders", purchaseOrderRoutes);
 
 module.exports = app;
