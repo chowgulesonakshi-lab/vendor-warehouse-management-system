@@ -14,6 +14,8 @@ const stockHistoryRoutes = require("./routes/stockHistoryRoutes");
 const lowStockRoutes = require("./routes/lowStockRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const purchaseOrderRoutes = require("./routes/purchaseOrderRoutes");
+const dispatchOrderRoutes = require("./routes/dispatchOrderRoutes");
+
 
 const app = express();
 
@@ -35,5 +37,6 @@ app.use("/api/stock-history", stockHistoryRoutes);
 app.use("/api/low-stock", lowStockRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/purchase-orders", purchaseOrderRoutes);
+app.use("/api/dispatch-orders", dispatchOrderRoutes);
 
 module.exports = app;

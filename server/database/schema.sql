@@ -167,7 +167,7 @@ CREATE TABLE purchase_order_items (
 
     quantity INT NOT NULL,
     unit_price DECIMAL(10,2),
-
+    received_quantity INT NOT NULL DEFAULT 0,
     total_price DECIMAL(12,2),
 
     FOREIGN KEY (purchase_order_id)
